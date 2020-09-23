@@ -14,7 +14,7 @@ namespace MySodaMachine
         public OrangeSoda()
         {
             name = "Orange Soda";
-            cost = 0.60;
+            cost = 0.06;
         }
 
         // member methods (CAN DO)
