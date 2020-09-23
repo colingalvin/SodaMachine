@@ -11,6 +11,11 @@ namespace MySodaMachine
         // member variables (HAS A)
 
         // constructor (SPAWN)
+        public Dime()
+        {
+            name = "Dime";
+            value = 0.10;
+        }
 
         // member methods (CAN DO)
     }

@@ -9,6 +9,15 @@ namespace MySodaMachine
     abstract class Coin
     {
         // member variables (HAS A)
+        public string name;
+        protected double value;
+        public double Value
+        {
+            get
+            {
+                return value;
+            }
+        }
 
         // constructor (SPAWN)
 

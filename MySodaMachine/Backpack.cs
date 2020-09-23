@@ -9,6 +9,7 @@ namespace MySodaMachine
     class Backpack
     {
         // member variables (HAS A)
+        public List<Can> cans;
 
         // constructor (SPAWN)
 

@@ -9,6 +9,14 @@ namespace MySodaMachine
     class Card
     {
         // member variables (HAS A)
+        private double availableFunds;
+        public double AvailableFunds
+        {
+            get
+            {
+                return availableFunds;
+            }
+        }
 
         // constructor (SPAWN)
 

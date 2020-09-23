@@ -11,6 +11,11 @@ namespace MySodaMachine
         // member variables (HAS A)
 
         // constructor (SPAWN)
+        public Quarter()
+        {
+            name = "Quarter";
+            value = 0.25;
+        }
 
         // member methods (CAN DO)
     }

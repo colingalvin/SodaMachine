@@ -9,6 +9,8 @@ namespace MySodaMachine
     class SodaMachine
     {
         // member variables (HAS A)
+        public List<Coin> register;
+        public List<Can> inventory;
 
         // constructor (SPAWN)
 

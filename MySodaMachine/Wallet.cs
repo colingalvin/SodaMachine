@@ -9,6 +9,8 @@ namespace MySodaMachine
     class Wallet
     {
         // member variables (HAS A)
+        public List<Coin> coins;
+        public Card card;
 
         // constructor (SPAWN)
 

@@ -9,6 +9,8 @@ namespace MySodaMachine
     class Simulation
     {
         // member variables (HAS A)
+        public SodaMachine sodaMachine;
+        public Customer customer;
 
         // constructor (SPAWN)
 

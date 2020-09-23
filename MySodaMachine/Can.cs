@@ -9,6 +9,15 @@ namespace MySodaMachine
     abstract class Can
     {
         // member variables (HAS A)
+        public string name;
+        protected double cost;
+        public double Cost
+        {
+            get
+            {
+                return cost;
+            }
+        }
 
         // constructor (SPAWN)
 
