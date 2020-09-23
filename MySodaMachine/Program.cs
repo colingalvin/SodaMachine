@@ -12,9 +12,9 @@ namespace MySodaMachine
         {
             SodaMachine sodaMachine = new SodaMachine();
             Customer customer = new Customer();
-            customer.DisplayContents(customer.wallet);
-            customer.DisplayContents(customer.backpack);
-
+            //customer.DisplayContents(customer.wallet);
+            //customer.DisplayContents(customer.backpack);
+            UserInterface.MakeSelection(sodaMachine);
         }
     }
 }
