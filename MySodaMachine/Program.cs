@@ -11,6 +11,10 @@ namespace MySodaMachine
         static void Main(string[] args)
         {
             SodaMachine sodaMachine = new SodaMachine();
+            Customer customer = new Customer();
+            customer.DisplayContents(customer.wallet);
+            customer.DisplayContents(customer.backpack);
+
         }
     }
 }
