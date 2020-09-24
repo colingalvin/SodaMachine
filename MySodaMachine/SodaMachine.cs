@@ -29,7 +29,7 @@ namespace MySodaMachine
             UpdateInventory(dime, 10);
             UpdateInventory(nickel, 20);
             UpdateInventory(penny, 50);
-            
+
             inventory = new List<Can>();
             Cola cola = new Cola();
             OrangeSoda orangeSoda = new OrangeSoda();
@@ -160,7 +160,7 @@ namespace MySodaMachine
                 }
                 else
                 {
-                    // Cannot complete transaction - display message, inadequate change
+                    Console.WriteLine("Transaction cannot be completed - exact change unavailable.");
                     foreach (Coin coin in hopperIn.ToList()) // Return hopperIn coins to customer
                     {
                         customer.wallet.coins.Add(coin);
@@ -240,61 +240,78 @@ namespace MySodaMachine
             bool canGiveExactChange = false;
             while (Math.Round(changeDue, 2) >= 0.25)
             {
-                for (int i = 0; i < register.Count; i++)
+                bool coinExists = Verification.CheckIfCoinsExist(register, "Quarter");// Check if quarters exist
+                if(coinExists)
                 {
-                    if(register[i].name == "Quarter")// Iterate through and remove quarter
+                    for (int i = 0; i < register.Count; i++)
                     {
-                        hopperOut.Add(register[i]); // Add removed coins to hopper
-                        register.RemoveAt(i); // Remove coin from register
-                        changeDue = Math.Round(changeDue - 0.25, 2); // Decrease change due
-                        break;
+                        if(register[i].name == "Quarter")// Iterate through and remove quarter
+                        {
+                            hopperOut.Add(register[i]); // Add removed coins to hopper
+                            register.RemoveAt(i); // Remove coin from register
+                            changeDue = Math.Round(changeDue - 0.25, 2); // Decrease change due
+                            break;
+                        }
                     }
                 }
-                // If no quarters, then dimes
-                // If no dimes, then nickels
-                // If no nickels, then pennies
+                else
+                {
+                    break;
+                }
             }
-            while (Math.Round(changeDue, 2) < 0.25 && Math.Round(changeDue, 2) >= 0.10)
+            while (Math.Round(changeDue, 2) >= 0.10)
             {
-                for (int i = 0; i < register.Count; i++)
+                bool coinExists = Verification.CheckIfCoinsExist(register, "Dime");
+                if(coinExists)
                 {
-                    if (register[i].name == "Dime")// Iterate through and remove quarter
+                    for (int i = 0; i < register.Count; i++)
                     {
-                        hopperOut.Add(register[i]); // Add removed coins to hopper
-                        register.RemoveAt(i); // Remove coin from register
-                        changeDue = Math.Round(changeDue - 0.10, 2); // Decrease change due
-                        break;
+                        if (register[i].name == "Dime")// Iterate through and remove quarter
+                        {
+                            hopperOut.Add(register[i]); // Add removed coins to hopper
+                            register.RemoveAt(i); // Remove coin from register
+                            changeDue = Math.Round(changeDue - 0.10, 2); // Decrease change due
+                            break;
+                        }
                     }
                 }
-                // If no dimes, then nickels
-                // If no nickels, then pennies
+                break;
             }
-            while (Math.Round(changeDue, 2) < 0.10 && Math.Round(changeDue, 2) >= 0.05)
+            while (Math.Round(changeDue, 2) >= 0.05)
             {
-                for (int i = 0; i < register.Count; i++)
+                bool coinExists = Verification.CheckIfCoinsExist(register, "Nickel");
+                if(coinExists)
                 {
-                    if (register[i].name == "Nickel")// Iterate through and remove quarter
+                    for (int i = 0; i < register.Count; i++)
                     {
-                        hopperOut.Add(register[i]); // Add removed coins to hopper
-                        register.RemoveAt(i); // Remove coin from register
-                        changeDue = Math.Round(changeDue - 0.05, 2); // Decrease change due
-                        break;
+                        if (register[i].name == "Nickel")// Iterate through and remove quarter
+                        {
+                            hopperOut.Add(register[i]); // Add removed coins to hopper
+                            register.RemoveAt(i); // Remove coin from register
+                            changeDue = Math.Round(changeDue - 0.05, 2); // Decrease change due
+                            break;
+                        }
                     }
                 }
-                // If no nickels, then pennies
+                break;
             }
-            while (Math.Round(changeDue, 2) < 0.05 && Math.Round(changeDue, 2) > 0)
+            while (Math.Round(changeDue, 2) > 0)
             {
-                for (int i = 0; i < register.Count; i++)
+                bool coinExists = Verification.CheckIfCoinsExist(register, "Nickel");
+                if(coinExists)
                 {
-                    if (register[i].name == "Penny")// Iterate through and remove quarter
+                    for (int i = 0; i < register.Count; i++)
                     {
-                        hopperOut.Add(register[i]); // Add removed coins to hopper
-                        register.RemoveAt(i); // Remove coin from register
-                        changeDue = Math.Round(changeDue - 0.01, 2); // Decrease change due
-                        break;
+                        if (register[i].name == "Penny")// Iterate through and remove quarter
+                        {
+                            hopperOut.Add(register[i]); // Add removed coins to hopper
+                            register.RemoveAt(i); // Remove coin from register
+                            changeDue = Math.Round(changeDue - 0.01, 2); // Decrease change due
+                            break;
+                        }
                     }
                 }
+                break;
             }
             // Add removed coins to hopper, dispense only if reach even change
             if (Math.Round(changeDue, 2) == 0.00)
