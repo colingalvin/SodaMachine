@@ -91,7 +91,7 @@ namespace MySodaMachine
                             cansOfRootBeer++;
                             break;
                     }
-                    Console.WriteLine($"Your wallet contains {cansOfCola} cans of Cola, {cansOfOrangeSoda} cans of Orange Soda, and {cansOfRootBeer} cans of Root Beer.");
+                    Console.WriteLine($"Your backpack contains {cansOfCola} cans of Cola, {cansOfOrangeSoda} cans of Orange Soda, and {cansOfRootBeer} cans of Root Beer.");
                 }
             }
         }
@@ -99,54 +99,103 @@ namespace MySodaMachine
         public Coin InsertCoin()
         {
             Console.WriteLine("Type 1 to insert quarter\nType 2 to insert dime\nType 3 to insert nickel\nType 4 to insert penny");
-            string userChoice = Console.ReadLine();
+            string userInput = Console.ReadLine();
+            string verifiedUserInput = Verification.VerifyUserInput(userInput, 1, 4);
             Coin insertedCoin = null;
-            switch(userChoice)
+            while(insertedCoin == null)
             {
-                case "1":
-                    for (int i = 0; i < wallet.coins.Count; i++)
-                    {
-                        if (wallet.coins[i].name == "Quarter")
+                switch(verifiedUserInput)
+                {
+                    case "1":
+                        bool coinExists = Verification.CheckIfObjectExists(wallet.coins, "Quarter");
+                        if (coinExists)
                         {
-                            insertedCoin = wallet.coins[i];
-                            wallet.coins.RemoveAt(i);
+                            for (int i = 0; i < wallet.coins.Count; i++)
+                            {
+                                if (wallet.coins[i].name == "Quarter")
+                                {
+                                    insertedCoin = wallet.coins[i];
+                                    wallet.coins.RemoveAt(i);
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("You do not have any quarters to insert. Choose another coin.");
+                            userInput = Console.ReadLine();
+                            verifiedUserInput = Verification.VerifyUserInput(userInput, 1, 4);
                             break;
                         }
-                    }
-                    break;
-                case "2":
-                    for (int i = 0; i < wallet.coins.Count; i++)
-                    {
-                        if (wallet.coins[i].name == "Dime")
+                        break;
+                    case "2":
+                        coinExists = Verification.CheckIfObjectExists(wallet.coins, "Dime");
+                        if(coinExists)
                         {
-                            insertedCoin = wallet.coins[i];
-                            wallet.coins.RemoveAt(i);
+                            for (int i = 0; i < wallet.coins.Count; i++)
+                            {
+                                if (wallet.coins[i].name == "Dime")
+                                {
+                                    insertedCoin = wallet.coins[i];
+                                    wallet.coins.RemoveAt(i);
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("You do not have any dimes to insert. Choose another coin.");
+                            userInput = Console.ReadLine();
+                            verifiedUserInput = Verification.VerifyUserInput(userInput, 1, 4);
                             break;
                         }
-                    }
-                    break;
-                case "3":
-                    for (int i = 0; i < wallet.coins.Count; i++)
-                    {
-                        if (wallet.coins[i].name == "Nickel")
+                        break;
+                    case "3":
+                        coinExists = Verification.CheckIfObjectExists(wallet.coins, "Nickel");
+                        if (coinExists)
                         {
-                            insertedCoin = wallet.coins[i];
-                            wallet.coins.RemoveAt(i);
+                            for (int i = 0; i < wallet.coins.Count; i++)
+                            {
+                                if (wallet.coins[i].name == "Nickel")
+                                {
+                                    insertedCoin = wallet.coins[i];
+                                    wallet.coins.RemoveAt(i);
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("You do not have any nickels to insert. Choose another coin.");
+                            userInput = Console.ReadLine();
+                            verifiedUserInput = Verification.VerifyUserInput(userInput, 1, 4);
                             break;
                         }
-                    }
-                    break;
-                case "4":
-                    for (int i = 0; i < wallet.coins.Count; i++)
-                    {
-                        if (wallet.coins[i].name == "Penny")
+                        break;
+                    case "4":
+                        coinExists = Verification.CheckIfObjectExists(wallet.coins, "Penny");
+                        if (coinExists)
                         {
-                            insertedCoin = wallet.coins[i];
-                            wallet.coins.RemoveAt(i);
+                            for (int i = 0; i < wallet.coins.Count; i++)
+                            {
+                                if (wallet.coins[i].name == "Penny")
+                                {
+                                    insertedCoin = wallet.coins[i];
+                                    wallet.coins.RemoveAt(i);
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("You do not have any pennies to insert. Choose another coin.");
+                            userInput = Console.ReadLine();
+                            verifiedUserInput = Verification.VerifyUserInput(userInput, 1, 4);
                             break;
                         }
-                    }
-                    break;
+                        break;
+                }
+
             }
             return insertedCoin;
         }

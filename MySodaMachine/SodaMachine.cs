@@ -94,7 +94,7 @@ namespace MySodaMachine
                 Console.WriteLine("Orange Soda (sold out)");
             }
 
-            if (colaCansAvailable > 0)
+            if (rootBeerCansAvailable > 0)
             {
                 Console.WriteLine("Type 3 for Root Beer");
             }
@@ -155,7 +155,7 @@ namespace MySodaMachine
                     foreach (Coin coin in hopperOut.ToList()) // Dispense hopperOut change to customer
                     {
                         customer.wallet.coins.Add(coin);
-                        hopperIn.Remove(coin);
+                        hopperOut.Remove(coin);
                     }
                 }
                 else
@@ -200,7 +200,7 @@ namespace MySodaMachine
                 case "Cola":
                     for (int i = 0; i < inventory.Count; i++)
                     {
-                        if (inventory[1].name == "Cola")
+                        if (inventory[i].name == "Cola")
                         {
                             dispensedSoda = inventory[i];
                             inventory.RemoveAt(i);
@@ -211,7 +211,7 @@ namespace MySodaMachine
                 case "Orange Soda":
                     for (int i = 0; i < inventory.Count; i++)
                     {
-                        if (inventory[1].name == "Orange Soda")
+                        if (inventory[i].name == "Orange Soda")
                         {
                             dispensedSoda = inventory[i];
                             inventory.RemoveAt(i);
@@ -222,7 +222,7 @@ namespace MySodaMachine
                 case "Root Beer":
                     for (int i = 0; i < inventory.Count; i++)
                     {
-                        if (inventory[1].name == "Root Beer")
+                        if (inventory[i].name == "Root Beer")
                         {
                             dispensedSoda = inventory[i];
                             inventory.RemoveAt(i);
@@ -240,7 +240,7 @@ namespace MySodaMachine
             bool canGiveExactChange = false;
             while (Math.Round(changeDue, 2) >= 0.25)
             {
-                bool coinExists = Verification.CheckIfCoinsExist(register, "Quarter");// Check if quarters exist
+                bool coinExists = Verification.CheckIfObjectExists(register, "Quarter");// Check if quarters exist
                 if(coinExists)
                 {
                     for (int i = 0; i < register.Count; i++)
@@ -261,7 +261,7 @@ namespace MySodaMachine
             }
             while (Math.Round(changeDue, 2) >= 0.10)
             {
-                bool coinExists = Verification.CheckIfCoinsExist(register, "Dime");
+                bool coinExists = Verification.CheckIfObjectExists(register, "Dime");
                 if(coinExists)
                 {
                     for (int i = 0; i < register.Count; i++)
@@ -275,11 +275,14 @@ namespace MySodaMachine
                         }
                     }
                 }
-                break;
+                else
+                {
+                    break;
+                }
             }
             while (Math.Round(changeDue, 2) >= 0.05)
             {
-                bool coinExists = Verification.CheckIfCoinsExist(register, "Nickel");
+                bool coinExists = Verification.CheckIfObjectExists(register, "Nickel");
                 if(coinExists)
                 {
                     for (int i = 0; i < register.Count; i++)
@@ -293,11 +296,14 @@ namespace MySodaMachine
                         }
                     }
                 }
-                break;
+                else
+                {
+                    break;
+                }
             }
             while (Math.Round(changeDue, 2) > 0)
             {
-                bool coinExists = Verification.CheckIfCoinsExist(register, "Nickel");
+                bool coinExists = Verification.CheckIfObjectExists(register, "Penny");
                 if(coinExists)
                 {
                     for (int i = 0; i < register.Count; i++)
@@ -311,7 +317,10 @@ namespace MySodaMachine
                         }
                     }
                 }
-                break;
+                else
+                {
+                    break;
+                }
             }
             // Add removed coins to hopper, dispense only if reach even change
             if (Math.Round(changeDue, 2) == 0.00)
