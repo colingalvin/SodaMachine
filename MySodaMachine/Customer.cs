@@ -96,11 +96,11 @@ namespace MySodaMachine
             }
         }
 
-        public double InsertCoin()
+        public Coin InsertCoin()
         {
             Console.WriteLine("Type 1 to insert quarter\nType 2 to insert dime\nType 3 to insert nickel\nType 4 to insert penny");
             string userChoice = Console.ReadLine();
-            double coinValue = 0;
+            Coin insertedCoin = null;
             switch(userChoice)
             {
                 case "1":
@@ -108,47 +108,47 @@ namespace MySodaMachine
                     {
                         if (wallet.coins[i].name == "Quarter")
                         {
+                            insertedCoin = wallet.coins[i];
                             wallet.coins.RemoveAt(i);
                             break;
                         }
                     }
-                    coinValue = 0.25;
                     break;
                 case "2":
                     for (int i = 0; i < wallet.coins.Count; i++)
                     {
                         if (wallet.coins[i].name == "Dime")
                         {
+                            insertedCoin = wallet.coins[i];
                             wallet.coins.RemoveAt(i);
                             break;
                         }
                     }
-                    coinValue = 0.10;
                     break;
                 case "3":
                     for (int i = 0; i < wallet.coins.Count; i++)
                     {
                         if (wallet.coins[i].name == "Nickel")
                         {
+                            insertedCoin = wallet.coins[i];
                             wallet.coins.RemoveAt(i);
                             break;
                         }
                     }
-                    coinValue = 0.05;
                     break;
                 case "4":
                     for (int i = 0; i < wallet.coins.Count; i++)
                     {
                         if (wallet.coins[i].name == "Penny")
                         {
+                            insertedCoin = wallet.coins[i];
                             wallet.coins.RemoveAt(i);
                             break;
                         }
                     }
-                    coinValue = 0.01;
                     break;
             }
-            return coinValue;
+            return insertedCoin;
         }
     }
 }
