@@ -13,7 +13,18 @@ namespace MySodaMachine
         public Customer customer;
 
         // constructor (SPAWN)
+        public Simulation()
+        {
+            sodaMachine = new SodaMachine();
+            customer = new Customer();
+        }
 
         // member methods (CAN DO)
+
+        public void RunSimulation()
+        {
+            string userSelection = UserInterface.MakeSelection(sodaMachine);
+            sodaMachine.CompleteTransaction(userSelection, customer);
+        }
     }
 }
