@@ -23,9 +23,8 @@ namespace MySodaMachine
 
         public void DisplayContents(Wallet wallet)
         {
-            Console.WriteLine($"\nYour card has a balance of: {wallet.card.AvailableFunds}");
             double amountInWallet = Math.Round(Verification.CountMoney(wallet.coins),2);
-            Console.WriteLine($"\nYou currently have ${amountInWallet} in your wallet.");
+            Console.WriteLine($"You currently have {amountInWallet:C2} in coins in your wallet.");
             int numberOfQuarters = 0;
             int numberOfDimes = 0;
             int numberOfNickels = 0;
@@ -60,7 +59,7 @@ namespace MySodaMachine
 
         public void DisplayContents(Card card)
         {
-            Console.WriteLine($"Your card has a balance of: {card.AvailableFunds}");
+            Console.WriteLine($"Your card has a balance of: {card.AvailableFunds:C2}\n");
         }
 
         public void DisplayContents(Backpack backpack)

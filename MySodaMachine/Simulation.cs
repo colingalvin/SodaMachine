@@ -9,10 +9,12 @@ namespace MySodaMachine
     class Simulation
     {
         // member variables (HAS A)
+
         public SodaMachine sodaMachine;
         public Customer customer;
 
         // constructor (SPAWN)
+
         public Simulation()
         {
             sodaMachine = new SodaMachine();
@@ -23,40 +25,41 @@ namespace MySodaMachine
 
         public void RunSimulation()
         {
-            string paymentMethod = UserInterface.ChoosePaymentMethod();
+            string paymentMethod = UserInterface.ChoosePaymentMethod(); // Choose card or coin payment
             string userSelection = "0";
-            if(paymentMethod == "1")
+            if(paymentMethod == "1") // Card payment
             {
                 Console.Clear();
-                Console.WriteLine($"Available funds: ${customer.wallet.card.AvailableFunds}");
-                userSelection = UserInterface.MakeSelection(sodaMachine); // User enters 0 to enter more money
-                bool canCompleteTransaction = sodaMachine.ProcessTransaction(userSelection, customer);
-                if (canCompleteTransaction)
+                customer.InsertPayment(customer.wallet.card); // Display available funds
+                userSelection = UserInterface.MakeSelection(sodaMachine, paymentMethod); // Choose soda
+                bool canCompleteTransaction = sodaMachine.ProcessTransaction(userSelection, customer); // Verify adequate funds are available
+                if (canCompleteTransaction) // If funds available
                 {
+                    // Clean this up - redundant call of GetSodaCost()
                     double sodaCost = Math.Round(SodaMachine.GetSodaCost(userSelection), 2);
                     sodaMachine.CompleteTransaction(customer, sodaCost, userSelection);
                 }
-                else
+                else // Funds not available
                 {
                     sodaMachine.CancelTransaction();
                 }
             }
             else
             {
-                while(userSelection == "0")
+                while(userSelection == "0") // User opts to enter more money
                 {
-                    customer.InsertPayment(sodaMachine);
-                    double moneyInHopper = Math.Round(Verification.CountMoney(sodaMachine.hopperIn), 2);
+                    customer.InsertPayment(sodaMachine); // Insert coin into machine, stored in hopperIn
+                    double moneyInHopper = Math.Round(Verification.CountMoney(sodaMachine.hopperIn), 2); // Calculate money currently in hopper
                     Console.Clear();
-                    Console.WriteLine($"Money inserted: ${moneyInHopper}");
-                    userSelection = UserInterface.MakeSelection(sodaMachine); // User enters 0 to enter more money
-                } // break out once selection has been made
-                bool canCompleteTransaction = sodaMachine.ProcessTransaction(userSelection);
-                if(canCompleteTransaction)
+                    Console.WriteLine($"Money inserted: {moneyInHopper:C2}\n"); // Display money in hopper
+                    userSelection = UserInterface.MakeSelection(sodaMachine, paymentMethod); // Choose soda or enter more money
+                } // Break once user chooses soda
+                bool canCompleteTransaction = sodaMachine.ProcessTransaction(userSelection); // Calculate money inserted v cost of soda
+                if(canCompleteTransaction) // If adequate amount of money passed in
                 {
                     sodaMachine.CompleteTransaction(customer, userSelection);
                 }
-                else
+                else // If inadequate amount of money passed in
                 {
                     sodaMachine.CancelTransaction(customer);
                 }
@@ -64,17 +67,18 @@ namespace MySodaMachine
 
         }
 
-        public void DisplayAllStats()
+        public void DisplayAllStats() // Display current state of simulation - see how objects have changed hands throughout transaction
         {
-            Console.WriteLine("Press enter to display all current simulation statistics: ");
+            Console.WriteLine("\nPress enter to display all current simulation statistics: ");
             Console.ReadLine();
             Console.Clear();
             Console.WriteLine("Soda machine:" +
                 $"\n{sodaMachine.inventory.Count} cans in inventory" +
-                $"\n{sodaMachine.register.Count} coins in register totalling {Math.Round(Verification.CountMoney(sodaMachine.register), 2)}" +
-                $"\n{sodaMachine.CardPaymentBalance} in card credits.\n");
-            Console.WriteLine("Customer wallet:");
-            customer.DisplayContents(customer.wallet);
+                $"\n{sodaMachine.register.Count} coins in register totalling {Verification.CountMoney(sodaMachine.register):C2}" +
+                $"\n{sodaMachine.CardPaymentBalance:C2} in card credits.\n");
+            Console.WriteLine("Customer:" +
+                $"\nCard balance of {customer.wallet.card.AvailableFunds:C2}" +
+                $"\nWallet contains {Verification.CountMoney(customer.wallet.coins):C2}");
             customer.DisplayContents(customer.backpack);
         }
 

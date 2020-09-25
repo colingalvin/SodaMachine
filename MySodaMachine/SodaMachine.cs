@@ -94,7 +94,7 @@ namespace MySodaMachine
             }
             if (colaCansAvailable > 0)
             {
-                Console.WriteLine("Enter 1 for Cola ($0.35)");
+                Console.WriteLine($"Enter 1 for Cola ($0.35)"); // get values from objects
             }
             else
             {
@@ -120,41 +120,43 @@ namespace MySodaMachine
             }
         }
 
-        // CARD TRANSACTIONS
+        // CARD TRANSACTIONS //
 
         public bool ProcessTransaction(string userInput, Customer customer) // Card transaction
         {
             bool canCompleteTransaction;
             double sodaCost = Math.Round(GetSodaCost(userInput), 2); // Collect cost info
-            if(sodaCost > Math.Round(customer.wallet.card.AvailableFunds, 2))
+            if(sodaCost > Math.Round(customer.wallet.card.AvailableFunds, 2)) // Determine whether adequate funds are available
             {
                 canCompleteTransaction = false;
-                // CancelTransaction();
             }
             else
             {
                 canCompleteTransaction = true;
-                // CompleteTransaction(customer, sodaCost, userInput);
             }
             return canCompleteTransaction;
         }
+
         public void CompleteTransaction(Customer customer, double sodaCost, string userSelection) // Card transaction
         {
-            cardPaymentBalance += Math.Round(sodaCost, 2);
-            Console.WriteLine($"The soda machine now has a card payment balance of ${cardPaymentBalance}");
+            Console.WriteLine("\nCard payment processing!");
 
-            customer.wallet.card.AvailableFunds -= Math.Round(sodaCost, 2);
-            Console.WriteLine($"The customer's card now has ${customer.wallet.card.AvailableFunds} in available funds");
+            cardPaymentBalance += Math.Round(sodaCost, 2); // Credit funds to soda machine
+            Console.WriteLine($"\nThe soda machine now has a card payment balance of {cardPaymentBalance:C2}");
 
-            customer.backpack.cans.Add(DispenseSoda(userSelection)); // soda machine dispenses soda
+            customer.wallet.card.AvailableFunds -= Math.Round(sodaCost, 2); // Debit funds from customer card
+            Console.WriteLine($"The customer's card now has {customer.wallet.card.AvailableFunds:C2} in available funds");
+
+            customer.backpack.cans.Add(DispenseSoda(userSelection)); // Machine dispenses soda to customer
             customer.DisplayContents(customer.backpack);
         }
+
         public void CancelTransaction() // Card transaction
         {
             Console.WriteLine("Cannot complete transaction - inadqeuate funds.");
         }
 
-        // COIN TRANSACTIONS
+        // COIN TRANSACTIONS //
 
         public bool ProcessTransaction(string userInput) // Coin transaction
         {
@@ -163,7 +165,7 @@ namespace MySodaMachine
             double sodaCost = Math.Round(GetSodaCost(userInput), 2); // Collect cost info
             if(sodaCost > moneyInHopper)
             {
-                Console.WriteLine("\nTransaction cannot be completed - please enter more money.");
+                Console.WriteLine("\nTransaction cannot be completed - inadequate funds.");
                 canCompleteTransaction = false;
             }
             else if(sodaCost == moneyInHopper)
@@ -177,7 +179,7 @@ namespace MySodaMachine
                 bool canGiveExactChange = DispenseChange(changeDue); // Checks if exact change can be given
                 if(canGiveExactChange == true)
                 {
-                    Console.WriteLine("\nTransaction complete, change due!");
+                    Console.WriteLine("\nTransaction complete, pleace collect your change!");
                     canCompleteTransaction = true;
                 }
                 else
@@ -196,7 +198,7 @@ namespace MySodaMachine
                 register.Add(coin);
                 hopperIn.Remove(coin);
             }
-            Console.WriteLine($"The soda machine register now contains ${Math.Round(Verification.CountMoney(register), 2)}");
+            Console.WriteLine($"The soda machine register now contains {Verification.CountMoney(register), 2:C2}");
             
             customer.backpack.cans.Add(DispenseSoda(userSelection)); // soda machine dispenses soda
             customer.DisplayContents(customer.backpack);
@@ -215,7 +217,7 @@ namespace MySodaMachine
                 customer.wallet.coins.Add(coin);
                 hopperIn.Remove(coin);
             }
-            Console.WriteLine($"The soda machine register now contains ${Math.Round(Verification.CountMoney(register), 2)}");
+            Console.WriteLine($"The soda machine register now contains {Verification.CountMoney(register), 2:C2}");
             customer.DisplayContents(customer.backpack);
             customer.DisplayContents(customer.wallet);
         }

@@ -12,7 +12,7 @@ namespace MySodaMachine
         {
             Simulation simulation = new Simulation();
             UserInterface.DisplayWelcome();
-            bool runAgain = false;
+            bool runAgain;
             do
             {
                 Console.Clear();
