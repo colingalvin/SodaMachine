@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,5 +51,15 @@ namespace MySodaMachine
             }
             return canExists;
         }
+        public static double CountMoney(List<Coin> repository)
+        {
+            double totalMoney = 0;
+            foreach (Coin coin in repository)
+            {
+                totalMoney += coin.Value;
+            }
+            return totalMoney;
+        }
+        
     }
 }

@@ -23,8 +23,43 @@ namespace MySodaMachine
 
         public void RunSimulation()
         {
-            string userSelection = UserInterface.MakeSelection(sodaMachine);
-            sodaMachine.CompleteTransaction(userSelection, customer);
+            UserInterface.DisplayWelcome();
+            string userSelection = "0";
+            while(userSelection == "0")
+            {
+                customer.InsertCoin(sodaMachine);
+                double moneyInHopper = Math.Round(Verification.CountMoney(sodaMachine.hopperIn), 2);
+                Console.WriteLine($"Money inserted: ${moneyInHopper}");
+                userSelection = UserInterface.MakeSelection(sodaMachine); // User enters 0 to enter more money
+            } // break out once selection has been made
+
+            bool canCompleteTransaction = sodaMachine.ProcessTransaction(userSelection);
+            if(canCompleteTransaction)
+            {
+                sodaMachine.CompleteTransaction(customer, userSelection);
+            }
+            else
+            {
+                sodaMachine.CancelTransaction(customer);
+            }
+        }
+
+        public bool RunSimulationAgain()
+        {
+            bool runAgain;
+            Console.Write("Would you like to purchase another soda?\nType 1 for yes, 2 for no: ");
+            string userInput = Console.ReadLine();
+            string verifiedUserInput = Verification.VerifyUserInput(userInput, 1, 2);
+            if(verifiedUserInput == "1")
+            {
+                runAgain = true;
+                return runAgain;
+            }
+            else
+            {
+                runAgain = false;
+                return runAgain;
+            }
         }
     }
 }

@@ -14,13 +14,24 @@ namespace MySodaMachine
 
         // member methods (CAN DO)
 
+        public static void DisplayWelcome()
+        {
+            Console.WriteLine("Press enter to insert coins and make a selection.");
+            Console.ReadLine();
+            Console.Clear();
+        }
+
         public static string MakeSelection(SodaMachine sodaMachine)
         {
-            Console.Clear();
+            Console.WriteLine("Please make a selection: ");
             sodaMachine.DisplayCurrentInventory();
-            Console.Write("\nPlease make a selection: ");
+            Console.Write("Enter your selection choice, or enter 0 to insert more coins.");
             string userInput = Console.ReadLine();
-            string verifiedUserInput = Verification.VerifyUserInput(userInput, 1, 3);
+            string verifiedUserInput = Verification.VerifyUserInput(userInput, 0, 3);
+            if(verifiedUserInput == "0")
+            {
+                return verifiedUserInput;
+            }
             bool canExists = false;
             while(!canExists)
             {
@@ -45,7 +56,5 @@ namespace MySodaMachine
             }
             return verifiedUserInput;
         }
-
-        //public static void 
     }
 }

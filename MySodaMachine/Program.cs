@@ -11,7 +11,14 @@ namespace MySodaMachine
         static void Main(string[] args)
         {
             Simulation simulation = new Simulation();
-            simulation.RunSimulation();
+            bool runAgain = false;
+            do
+            {
+                Console.Clear();
+                simulation.RunSimulation();
+                runAgain = simulation.RunSimulationAgain();
+            }
+            while (runAgain);
         }
     }
 }

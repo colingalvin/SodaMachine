@@ -34,9 +34,9 @@ namespace MySodaMachine
             Cola cola = new Cola();
             OrangeSoda orangeSoda = new OrangeSoda();
             RootBeer rootBeer = new RootBeer();
-            UpdateInventory(cola, 20);
-            UpdateInventory(orangeSoda, 20);
-            UpdateInventory(rootBeer, 20);
+            UpdateInventory(cola, 5);
+            UpdateInventory(orangeSoda, 5);
+            UpdateInventory(rootBeer, 5);
         }
 
         // member methods (CAN DO)
@@ -78,7 +78,7 @@ namespace MySodaMachine
             }
             if (colaCansAvailable > 0)
             {
-                Console.WriteLine("Type 1 for Cola");
+                Console.WriteLine("Type 1 for Cola ($0.35)");
             }
             else
             {
@@ -87,7 +87,7 @@ namespace MySodaMachine
 
             if (orangeSodaCansAvailable > 0)
             {
-                Console.WriteLine("Type 2 for Orange Soda");
+                Console.WriteLine("Type 2 for Orange Soda ($0.06)");
             }
             else
             {
@@ -96,7 +96,7 @@ namespace MySodaMachine
 
             if (rootBeerCansAvailable > 0)
             {
-                Console.WriteLine("Type 3 for Root Beer");
+                Console.WriteLine("Type 3 for Root Beer ($0.60)");
             }
             else
             {
@@ -104,100 +104,94 @@ namespace MySodaMachine
             }
         }
 
-        public void CompleteTransaction(string userInput, Customer customer)
+        public bool ProcessTransaction(string userInput)
         {
-            // Select soda based on userSelection
-            string[] userSelection = SelectSoda(userInput); // Collect name and cost info to display during transaction
-            string sodaName = userSelection[0];
-            double sodaCost = Math.Round(double.Parse(userSelection[1]), 2);
-            // WHILE LOOP - while customer has not yet entered enough change
-            while (Math.Round(sodaCost, 2) > 0)
+            bool canCompleteTransaction;
+            double moneyInHopper = Math.Round(Verification.CountMoney(hopperIn), 2);
+            double sodaCost = Math.Round(GetSodaCost(userInput), 2); // Collect name and cost info to display during transaction
+            if(sodaCost > moneyInHopper)
             {
-                Console.Clear();
-                // Display selection & remaining cost
-                Console.WriteLine($"{sodaName}: ${Math.Round(sodaCost, 2)} (amount remaining)");
-                // Display customer wallet contents (current total and coin count)
-                customer.DisplayContents(customer.wallet);
-                // Customer inputs coin to deposit
-                Coin insertedCoin = customer.InsertCoin();
-                // Coin removed from customer wallet and stored in soda machine hopper
-                hopperIn.Add(insertedCoin);
-                // Subtract coin value from cost of selection
-                sodaCost -= Math.Round(insertedCoin.Value, 2);
+                Console.WriteLine("Transaction cannot be completed - please enter more money.");
+                canCompleteTransaction = false;
             }
-            // When enough money has been entered
-            // Compare cost to amount entered
-            if (Math.Round(sodaCost, 2) == 0) // If no change due
+            else if(sodaCost == moneyInHopper)
             {
-                // Deposit coins from hopper into machine
-                foreach (Coin coin in hopperIn.ToList()) //  throw exception?
-                {
-                    Console.WriteLine("Transaction complete, no change due!");
-                    register.Add(coin);
-                    hopperIn.Remove(coin);
-                }
-                // Remove can from machine inventory, add can to customer backpack
-                customer.backpack.cans.Add(DispenseSoda(sodaName));
+                Console.WriteLine("Transaction complete, no change due!");
+                canCompleteTransaction = true;
             }
-            else if(Math.Round(sodaCost, 2) < 0) // If change is due, run check change method
+            else
             {
-                double changeDue = Math.Round(Math.Abs(sodaCost), 2); // Pass absolute value of sodaCost (how much change is due)
-                bool canCompletePurchase = DispenseChange(changeDue); // Checks if exact change can be given
-                if(canCompletePurchase == true)
+                double changeDue = Math.Round(moneyInHopper - sodaCost, 2);
+                bool canGiveExactChange = DispenseChange(changeDue); // Checks if exact change can be given
+                if(canGiveExactChange == true)
                 {
                     Console.WriteLine("Transaction complete, change due!");
-                    foreach (Coin coin in hopperIn.ToList()) // Machine takes in hopperIn coins
-                    {
-                        register.Add(coin);
-                        hopperIn.Remove(coin);
-                    }
-                    customer.backpack.cans.Add(DispenseSoda(sodaName)); // Remove can from machine inventory, add can to customer backpack
-                    foreach (Coin coin in hopperOut.ToList()) // Dispense hopperOut change to customer
-                    {
-                        customer.wallet.coins.Add(coin);
-                        hopperOut.Remove(coin);
-                    }
+                    canCompleteTransaction = true;
                 }
                 else
                 {
                     Console.WriteLine("Transaction cannot be completed - exact change unavailable.");
-                    foreach (Coin coin in hopperIn.ToList()) // Return hopperIn coins to customer
-                    {
-                        customer.wallet.coins.Add(coin);
-                        hopperIn.Remove(coin);
-                    }
+                    canCompleteTransaction = false;
                 }
-
             }
+            return canCompleteTransaction;
         }
 
-        public string[] SelectSoda(string userInput)
+        public void CompleteTransaction(Customer customer, string userSelection)
         {
-            string[] userSelection = new string[2];
-            switch(userInput)
+            foreach (Coin coin in hopperIn.ToList()) // soda machine takes in money from hopper in
+            {
+                register.Add(coin);
+                hopperIn.Remove(coin);
+            }
+            Console.WriteLine($"The soda machine register now contains ${Math.Round(Verification.CountMoney(register), 2)}");
+            
+            customer.backpack.cans.Add(DispenseSoda(userSelection)); // soda machine dispenses soda
+            customer.DisplayContents(customer.backpack);
+            foreach (Coin coin in hopperOut.ToList()) // soda machine dispenses change
+            {
+                customer.wallet.coins.Add(coin);
+                hopperOut.Remove(coin);
+            }
+            customer.DisplayContents(customer.wallet);
+        }
+
+        public void CancelTransaction(Customer customer)
+        {
+            foreach (Coin coin in hopperIn.ToList()) // soda machine returns money from hopper in
+            {
+                customer.wallet.coins.Add(coin);
+                hopperIn.Remove(coin);
+            }
+            Console.WriteLine($"The soda machine register now contains ${Math.Round(Verification.CountMoney(register), 2)}");
+            customer.DisplayContents(customer.backpack);
+            customer.DisplayContents(customer.wallet);
+        }
+
+        private static double GetSodaCost(string userInput)
+        {
+            double sodaCost = 0;
+            switch (userInput)
             {
                 case "1":
-                    userSelection[0] = "Cola";
-                    userSelection[1] = "0.35";
+                    sodaCost = 0.35;
                     break;
                 case "2":
-                    userSelection[0] = "Orange Soda";
-                    userSelection[1] = "0.06";
+                    sodaCost = 0.06;
                     break;
                 case "3":
-                    userSelection[0] = "Root Beer";
-                    userSelection[1] = "0.60";
+                    sodaCost = 0.60;
                     break;
             }
-            return userSelection;
+            return Math.Round(sodaCost, 2);
         }
 
-        public Can DispenseSoda(string sodaName)
+        private Can DispenseSoda(string userSelection)
         {
             Can dispensedSoda = null;
-            switch (sodaName)
+            switch (userSelection)
             {
-                case "Cola":
+                case "1":
                     for (int i = 0; i < inventory.Count; i++)
                     {
                         if (inventory[i].name == "Cola")
@@ -208,7 +202,7 @@ namespace MySodaMachine
                         }
                     }
                     break;
-                case "Orange Soda":
+                case "2":
                     for (int i = 0; i < inventory.Count; i++)
                     {
                         if (inventory[i].name == "Orange Soda")
@@ -219,7 +213,7 @@ namespace MySodaMachine
                         }
                     }
                     break;
-                case "Root Beer":
+                case "3":
                     for (int i = 0; i < inventory.Count; i++)
                     {
                         if (inventory[i].name == "Root Beer")
@@ -234,7 +228,7 @@ namespace MySodaMachine
             return dispensedSoda;
         }
 
-        public bool DispenseChange(double changeDue)
+        private bool DispenseChange(double changeDue)
         {
             // Calculate total change available, ensure than change available is greater than change due
             bool canGiveExactChange = false;

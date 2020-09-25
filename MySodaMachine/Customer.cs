@@ -20,20 +20,21 @@ namespace MySodaMachine
         }
 
         // member methods (CAN DO)
-        private void CountMoney()
-        {
-            double totalMoney = 0;
-            foreach (Coin coin in wallet.coins)
-            {
-                totalMoney += coin.Value;
-            }
-            string totalMoneyFormatted = totalMoney.ToString("C2");
-            Console.WriteLine($"You currently have {totalMoneyFormatted} in your wallet.");
-        }
+        //private void CountMoney()
+        //{
+        //    double totalMoney = 0;
+        //    foreach (Coin coin in wallet.coins)
+        //    {
+        //        totalMoney += coin.Value;
+        //    }
+        //    string totalMoneyFormatted = totalMoney.ToString("C2");
+        //    Console.WriteLine($"You currently have {totalMoneyFormatted} in your wallet.");
+        //}
 
         public void DisplayContents(Wallet wallet)
         {
-            CountMoney();
+            double amountInWallet = Math.Round(Verification.CountMoney(wallet.coins),2);
+            Console.WriteLine($"\nYou currently have ${amountInWallet} in your wallet.");
             int numberOfQuarters = 0;
             int numberOfDimes = 0;
             int numberOfNickels = 0;
@@ -74,11 +75,11 @@ namespace MySodaMachine
             }
             else
             {
+                int cansOfCola = 0;
+                int cansOfOrangeSoda = 0;
+                int cansOfRootBeer = 0;
                 foreach (Can can in backpack.cans)
                 {
-                    int cansOfCola = 0;
-                    int cansOfOrangeSoda = 0;
-                    int cansOfRootBeer = 0;
                     switch (can.name)
                     {
                         case "Cola":
@@ -91,14 +92,15 @@ namespace MySodaMachine
                             cansOfRootBeer++;
                             break;
                     }
-                    Console.WriteLine($"Your backpack contains {cansOfCola} cans of Cola, {cansOfOrangeSoda} cans of Orange Soda, and {cansOfRootBeer} cans of Root Beer.");
                 }
+                Console.WriteLine($"Your backpack contains {cansOfCola} can(s) of Cola, {cansOfOrangeSoda} can(s) of Orange Soda, and {cansOfRootBeer} can(s) of Root Beer.");
             }
         }
 
-        public Coin InsertCoin()
+        public void InsertCoin(SodaMachine sodaMachine)
         {
-            Console.WriteLine("Type 1 to insert quarter\nType 2 to insert dime\nType 3 to insert nickel\nType 4 to insert penny");
+            DisplayContents(wallet);
+            Console.WriteLine("\nType 1 to insert quarter\nType 2 to insert dime\nType 3 to insert nickel\nType 4 to insert penny");
             string userInput = Console.ReadLine();
             string verifiedUserInput = Verification.VerifyUserInput(userInput, 1, 4);
             Coin insertedCoin = null;
@@ -197,7 +199,7 @@ namespace MySodaMachine
                 }
 
             }
-            return insertedCoin;
+            sodaMachine.hopperIn.Add(insertedCoin);
         }
     }
 }
