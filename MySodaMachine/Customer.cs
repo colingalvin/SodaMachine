@@ -20,19 +20,10 @@ namespace MySodaMachine
         }
 
         // member methods (CAN DO)
-        //private void CountMoney()
-        //{
-        //    double totalMoney = 0;
-        //    foreach (Coin coin in wallet.coins)
-        //    {
-        //        totalMoney += coin.Value;
-        //    }
-        //    string totalMoneyFormatted = totalMoney.ToString("C2");
-        //    Console.WriteLine($"You currently have {totalMoneyFormatted} in your wallet.");
-        //}
 
         public void DisplayContents(Wallet wallet)
         {
+            Console.WriteLine($"\nYour card has a balance of: {wallet.card.AvailableFunds}");
             double amountInWallet = Math.Round(Verification.CountMoney(wallet.coins),2);
             Console.WriteLine($"\nYou currently have ${amountInWallet} in your wallet.");
             int numberOfQuarters = 0;
@@ -67,6 +58,11 @@ namespace MySodaMachine
             }
         }
 
+        public void DisplayContents(Card card)
+        {
+            Console.WriteLine($"Your card has a balance of: {card.AvailableFunds}");
+        }
+
         public void DisplayContents(Backpack backpack)
         {
             if(backpack.cans.Count == 0)
@@ -97,7 +93,12 @@ namespace MySodaMachine
             }
         }
 
-        public void InsertCoin(SodaMachine sodaMachine)
+        public void InsertPayment(Card card)
+        {
+            DisplayContents(card);
+        }
+
+        public void InsertPayment(SodaMachine sodaMachine)
         {
             DisplayContents(wallet);
             Console.WriteLine("\nType 1 to insert quarter\nType 2 to insert dime\nType 3 to insert nickel\nType 4 to insert penny");

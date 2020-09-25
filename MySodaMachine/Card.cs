@@ -16,9 +16,17 @@ namespace MySodaMachine
             {
                 return availableFunds;
             }
+            set
+            {
+                availableFunds = value;
+            }
         }
 
         // constructor (SPAWN)
+        public Card()
+        {
+            availableFunds = 5.00;
+        }
 
         // member methods (CAN DO)
     }

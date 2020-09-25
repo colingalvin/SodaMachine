@@ -16,16 +16,25 @@ namespace MySodaMachine
 
         public static void DisplayWelcome()
         {
-            Console.WriteLine("Press enter to insert coins and make a selection.");
+            Console.WriteLine("Press enter to enter payment and make a selection.");
             Console.ReadLine();
             Console.Clear();
         }
+
+        public static string ChoosePaymentMethod()
+        {
+            Console.WriteLine("Enter 1 to pay with card, Enter 2 to pay with coins: ");
+            string userInput = Console.ReadLine();
+            string verifiedUserInput = Verification.VerifyUserInput(userInput, 1, 2);
+            return verifiedUserInput;
+        }
+
 
         public static string MakeSelection(SodaMachine sodaMachine)
         {
             Console.WriteLine("Please make a selection: ");
             sodaMachine.DisplayCurrentInventory();
-            Console.Write("Enter your selection choice, or enter 0 to insert more coins.");
+            Console.Write("Select a soda, or enter 0 to insert more coins.");
             string userInput = Console.ReadLine();
             string verifiedUserInput = Verification.VerifyUserInput(userInput, 0, 3);
             if(verifiedUserInput == "0")
